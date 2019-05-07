@@ -167,8 +167,8 @@ $schedule->command('foo')->sendOutputTo($filePath)->processOutput(function ($tex
     $app->mailer
         ->compose()
         ->setTextBody($textBody)
-        ->setSubject($this->getEmailSubject())
-        ->setTo($addresses)
+        ->setSubject('Cronjob notification')
+        ->setTo('admin@example.com')
         ->send();
 });
 ```
