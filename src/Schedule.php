@@ -28,6 +28,11 @@ class Schedule extends \CComponent
      */
     protected $_mutex;
 
+    /**
+     * @var string The name of cli script
+     */
+    public $cliScriptName = 'yiic';
+
 
     /**
      * Schedule constructor.

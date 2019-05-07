@@ -52,7 +52,7 @@ class ScheduleCommand extends \Anonymous\Scheduling\ScheduleCommand
 When setup will be finished just put single line into crontab:
 
 ```
-* * * * * php /path/to/yii yii schedule/run 1>> /dev/null 2>&1
+* * * * * php /path/to/yii yii schedule run 1>> /dev/null 2>&1
 ```
 
 You can put your schedule into the `schedule.php` file, or add it withing bootstrapping of your extension or
@@ -158,7 +158,8 @@ $schedule->command('foo')->monthly()->when(function()
 **E-mail The Output Of A Scheduled Job**
 
 ```php
-$schedule->command('foo')->processOutput(function ($textBody, $app) {
+$schedule->command('foo')->sendOutputTo($filePath)->processOutput(function ($textBody, $app) 
+{
     if (trim($textBody) === '' ) {
         return;
     }
@@ -181,14 +182,15 @@ Used by default `FileMutex` or 'mutex' application component (https://github.com
 
 **Running Tasks On One Server**
 
->To utilize this feature, you must config mutex in the application component, except the FileMutex:  `yii\mutex\MysqlMutex`,`yii\mutex\PgsqlMutex`,`yii\mutex\OracleMutex` or `yii\redis\Mutex`. In addition, all servers must be communicating with the same central db/cache server.
+>To utilize this feature, you must config mutex in the application component, except the FileMutex:  `Yiisoft\Mutex\MysqlMutex`,`Yiisoft\Mutex\PgsqlMutex`,`Yiisoft\Mutex\OracleMutex` or `Yiisoft\Mutex\RedisMutex`. In addition, all servers must be communicating with the same central db/cache server.
 
 Below shows the redis mutex demo:
 
 ```php
+
 'components' => [
     'mutex' => [
-        'class' => 'yii\redis\Mutex',
+        'class' => 'Yiisoft\Mutex\RedisMutex',
         'redis' => [
             'hostname' => 'localhost',
             'port' => 6379,
@@ -199,7 +201,7 @@ Below shows the redis mutex demo:
 ```
 
 ```php
-$schedule->command('report:generate')
+$schedule->command('report generate')
                 ->fridays()
                 ->at('17:00')
                 ->onOneServer();
