@@ -5,7 +5,7 @@ namespace Anonymous\Scheduling;
 
 use Yii;
 use Yiisoft\Mutex\Mutex;
-use Yiisoft\Mutex\FileMutex;
+use Yiisoft\Mutex\File\FileMutex;
 
 /**
  * Class Schedule
@@ -42,7 +42,7 @@ class Schedule extends \CComponent
     {
         $this->_mutex = Yii::app()->hasComponent('mutex')
             ? Yii::app()->getComponent('mutex')
-            : new FileMutex(Yii::app()->runtimePath);
+            : new FileMutex('schedule', Yii::app()->runtimePath);
     }
 
     /**
@@ -104,5 +104,4 @@ class Schedule extends \CComponent
             return $event->isDue($app);
         });
     }
-
 }
