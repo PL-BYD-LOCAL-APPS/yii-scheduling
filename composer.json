@@ -16,15 +16,15 @@
   "license": "MIT",
   "type": "yii-extension",
   "require": {
-    "php": ">=7.1.0",
+    "php": ">=7.3.0",
     "yiisoft/yii": "*",
-    "yiisoft/mutex": "3.0.x-dev",
-    "yiisoft/mutex-file": "3.0.x-dev",
+    "yiisoft/mutex": "^1.1",
+    "yiisoft/mutex-file": "^1.1",
     "symfony/process": "2.6.* || 3.* || 4.*",
     "mtdowling/cron-expression": "~1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "7.*"
+    "phpunit/phpunit": "8.*"
   },
   "suggest": {
     "guzzlehttp/guzzle": "Required to use the thenPing method on schedules (~5.0)."
