@@ -15,6 +15,8 @@ use Yiisoft\Mutex\FileMutex;
  */
 class Event extends \CComponent
 {
+    const EVENT_BEFORE_RUN = 'beforeRun';
+    const EVENT_AFTER_RUN = 'afterRun';
 
     /**
      * Command string
@@ -83,6 +85,13 @@ class Event extends \CComponent
     protected $_mutex;
 
     /**
+     * Return code of command executed.
+     *
+     * @var int
+     */
+    protected $_resultCode;
+
+    /**
      * Create a new event instance.
      *
      * @param Mutex $mutex
@@ -102,11 +111,15 @@ class Event extends \CComponent
      */
     public function run(\CConsoleApplication $app)
     {
+        $this->raiseEvent(self::EVENT_BEFORE_RUN, new CEvent($this));
+
         if (count($this->_afterCallbacks) > 0) {
             $this->runCommandInForeground($app);
         } else {
             $this->runCommandInBackground($app);
         }
+
+        $this->raiseEvent(self::EVENT_AFTER_RUN, new CEvent($this));
     }
 
     /**
@@ -126,8 +139,12 @@ class Event extends \CComponent
      */
     protected function runCommandInForeground(\CConsoleApplication $app)
     {
-        (new Process(
-            trim($this->buildCommand(), '& '), dirname($app->request->getScriptFile()), null, null, null
+        $this->_resultCode = (new Process(
+            trim($this->buildCommand(), '& '),
+            dirname($app->request->getScriptFile()),
+            null,
+            null,
+            null
         ))->run();
         $this->callAfterCallbacks($app);
     }
@@ -163,7 +180,7 @@ class Event extends \CComponent
     protected function runCommandInBackground(\CConsoleApplication $app)
     {
         chdir(dirname($app->request->getScriptFile()));
-        exec($this->buildCommand());
+        exec($this->buildCommand(), $output, $this->_resultCode);
     }
 
     /**
@@ -199,7 +216,8 @@ class Event extends \CComponent
      */
     protected function filtersPass(\CConsoleApplication $app)
     {
-        if ($this->_filter && !call_user_func($this->_filter, $app) ||
+        if (
+            $this->_filter && !call_user_func($this->_filter, $app) ||
             $this->_reject && call_user_func($this->_reject, $app)
         ) {
             return false;
@@ -663,4 +681,23 @@ class Event extends \CComponent
         }
     }
 
+    /**
+     * Returns result code of the command executed.
+     *
+     * @return integer
+     */
+    public function getResultCode(): int
+    {
+        return $this->resultCode ?? 0;
+    }
+
+    /**
+     * Returns output file name.
+     *
+     * @return string
+     */
+    public function getOutputName(): string
+    {
+        return $this->_output ?? '';
+    }
 }
