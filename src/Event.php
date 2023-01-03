@@ -15,8 +15,8 @@ use Yiisoft\Mutex\FileMutex;
  */
 class Event extends \CComponent
 {
-    const EVENT_BEFORE_RUN = 'beforeRun';
-    const EVENT_AFTER_RUN = 'afterRun';
+    const EVENT_BEFORE_RUN = 'onBeforeRun';
+    const EVENT_AFTER_RUN = 'onAfterRun';
 
     /**
      * Command string
@@ -111,7 +111,7 @@ class Event extends \CComponent
      */
     public function run(\CConsoleApplication $app)
     {
-        $this->raiseEvent(self::EVENT_BEFORE_RUN, new CEvent($this));
+        $this->onBeforeRun(new CEvent($this));
 
         if (count($this->_afterCallbacks) > 0) {
             $this->runCommandInForeground($app);
@@ -119,7 +119,17 @@ class Event extends \CComponent
             $this->runCommandInBackground($app);
         }
 
-        $this->raiseEvent(self::EVENT_AFTER_RUN, new CEvent($this));
+        $this->onAfterRun(new CEvent($this));
+    }
+
+    public function onBeforeRun($event)
+    {
+        $this->raiseEvent(self::EVENT_BEFORE_RUN, $event);
+    }
+
+    public function onAfterRun($event)
+    {
+        $this->raiseEvent(self::EVENT_AFTER_RUN, $event);
     }
 
     /**
