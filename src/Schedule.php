@@ -104,4 +104,40 @@ class Schedule extends \CComponent
             return $event->isDue($app);
         });
     }
+
+    /**
+     * Creates scheduled events based on a list of command => cron pairs, eg.
+     * [
+     *     'ls' => '* * * * *',
+     * ]
+     *
+     * @param array $commands
+     * @return void
+     */
+    public function fromCommandsAndCronsList(array $commands, bool $runNow)
+    {
+        $timestamp = date('Ymd-Hi');
+        $cnt = 0;
+
+        foreach ($commands as $command => $cronDefinition) {
+            $cnt++;
+
+            if ($runNow) {
+                $cronDefinition = '* * * * *';
+            }
+
+            if (empty($cronDefinition)) {
+                continue;
+            }
+
+            $filename = preg_split('/\s/', $command, 2);
+            $filename = preg_replace('/\//', '_', $filename[0]);
+
+            $event = $this->command($command)
+                ->sendOutputTo(\Yii::getPathOfAlias('application.runtime.schedule') . "/{$filename}_{$timestamp}_{$cnt}.out")
+                ->cron($cronDefinition);
+
+            $event->attachEventHandler('onAfterRun', [$this, 'handleAfterRun']);
+        }
+    }
 }
