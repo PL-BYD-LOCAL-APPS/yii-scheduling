@@ -118,7 +118,7 @@ class Event extends \CComponent
      */
     public function run(\CConsoleApplication $app)
     {
-        $this->onBeforeRun(new CEvent($this));
+        $this->onBeforeRun(new \CEvent($this));
 
         if (count($this->_afterCallbacks) > 0) {
             $this->runCommandInForeground($app);
@@ -126,7 +126,7 @@ class Event extends \CComponent
             $this->runCommandInBackground($app);
         }
 
-        $this->onAfterRun(new CEvent($this));
+        $this->onAfterRun(new \CEvent($this));
     }
 
     public function onBeforeRun($event)
