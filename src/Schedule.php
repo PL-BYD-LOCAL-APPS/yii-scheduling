@@ -114,7 +114,7 @@ class Schedule extends \CComponent
      * @param array $commands
      * @return void
      */
-    public function fromCommandsAndCronsList(array $commands, bool $runNow)
+    public function fromCommandsAndCronsList(array $commands, bool $runNow, array $afterRunHandler)
     {
         $timestamp = date('Ymd-Hi');
         $cnt = 0;
@@ -137,7 +137,9 @@ class Schedule extends \CComponent
                 ->sendOutputTo(\Yii::getPathOfAlias('application.runtime.schedule') . "/{$filename}_{$timestamp}_{$cnt}.out")
                 ->cron($cronDefinition);
 
-            $event->attachEventHandler('onAfterRun', [$this, 'handleAfterRun']);
+            if (!empty($afterRunHandler)) {
+                $event->attachEventHandler('onAfterRun', $afterRunHandler);
+            }
         }
     }
 }

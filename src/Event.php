@@ -717,7 +717,7 @@ class Event extends \CComponent
      */
     public function getResultCode(): int
     {
-        return $this->resultCode ?? 0;
+        return $this->_resultCode ?? 0;
     }
 
     /**
