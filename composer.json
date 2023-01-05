@@ -21,7 +21,7 @@
     "yiisoft/mutex": "^1.1",
     "yiisoft/mutex-file": "^1.1",
     "symfony/process": "2.6.* || 3.* || 4.*",
-    "mtdowling/cron-expression": "~1.0"
+    "dragonmantank/cron-expression": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "8.*"
