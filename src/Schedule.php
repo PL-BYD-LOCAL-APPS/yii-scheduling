@@ -112,19 +112,16 @@ class Schedule extends \CComponent
      * ]
      *
      * @param array $commands
+     * @param array $afterRunHandler
      * @return void
      */
-    public function fromCommandsAndCronsList(array $commands, bool $runNow, array $afterRunHandler)
+    public function fromCommandsAndCronsList(array $commands, array $afterRunHandler)
     {
         $timestamp = date('Ymd-Hi');
         $cnt = 0;
 
         foreach ($commands as $command => $cronDefinition) {
             $cnt++;
-
-            if ($runNow) {
-                $cronDefinition = '* * * * *';
-            }
 
             if (empty($cronDefinition)) {
                 continue;
