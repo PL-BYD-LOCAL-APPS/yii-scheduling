@@ -156,13 +156,16 @@ class Event extends \CComponent
      */
     protected function runCommandInForeground(\CConsoleApplication $app)
     {
-        $this->_resultCode = (new Process(
-            trim($this->buildCommand(), '& '),
-            dirname($app->request->getScriptFile()),
-            null,
-            null,
-            null
-        ))->run();
+        $command = trim($this->buildCommand(), '& ');
+        $cwd = dirname($app->request->getScriptFile());
+        if (method_exists(Process::class, 'fromShellCommandline')) {
+            $process = Process::fromShellCommandline($command, $cwd, null, null, null);
+        }
+        else {
+            $process = (new Process($command, $cwd, null, null, null));
+        }
+        $process->run();
+
         $this->callAfterCallbacks($app);
     }
 

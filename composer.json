@@ -20,7 +20,7 @@
     "yiisoft/yii": "*",
     "yiisoft/mutex": "^1.1",
     "yiisoft/mutex-file": "^1.1",
-    "symfony/process": "2.6.* || 3.* || 4.*",
+    "symfony/process": "2.6.* || 3.* || 4.* || ^5.0 || ^6.0 || ^7.0",
     "dragonmantank/cron-expression": "^3.3"
   },
   "require-dev": {
