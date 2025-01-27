@@ -1,0 +1,57 @@
+<ruleset name="atos-coding-standard">
+    <description>Atos PHP coding standards</description>
+    <exclude-pattern type="relative">*/node_modules/*</exclude-pattern>
+    <exclude-pattern type="relative">autoload.php</exclude-pattern>
+    <exclude-pattern type="relative">build</exclude-pattern>
+    <exclude-pattern type="relative">runtime</exclude-pattern>
+    <exclude-pattern type="relative">vendor</exclude-pattern>
+    <exclude-pattern type="relative">tests</exclude-pattern>
+    <exclude-pattern type="relative">migration</exclude-pattern>
+    <exclude-pattern type="relative">extensions</exclude-pattern>
+    <exclude-pattern type="relative">web</exclude-pattern>
+
+	<rule ref="Internal.NoCodeFound">
+    	<severity>0</severity>
+	</rule>
+
+    <rule ref="PSR1.Files.SideEffects">
+        <exclude-pattern>index*.php</exclude-pattern>
+    </rule>
+
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax" />
+    <!-- <rule ref="Generic.Metrics.NestingLevel" /> -->
+    <!-- <rule ref="Generic.NamingConventions.AbstractClassNamePrefix" /> -->
+    <rule ref="Generic.NamingConventions.ConstructorName" />
+    <rule ref="Generic.NamingConventions.InterfaceNameSuffix" />
+    <rule ref="Generic.NamingConventions.TraitNameSuffix" />
+    <rule ref="Generic.PHP.DeprecatedFunctions" />
+    <rule ref="Generic.PHP.DisallowAlternativePHPTags" />
+    <rule ref="Generic.PHP.DisallowShortOpenTag" />
+    <rule ref="Generic.PHP.ForbiddenFunctions" />
+
+    <rule ref="PSR12">
+        <!-- Yii 1.1 we still have consts without "public" -->
+        <exclude name="PSR12.Properties.ConstantVisibility.NotFound" />
+
+		<!-- Yii 1.1 does not use namespaces -->
+		<exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>
+
+		<!-- Yii 1.1 uses Yii::import() at the begining of file -->
+		<exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
+
+		<!-- legacy code, we are not using this convention anymore in new projects -->
+		<exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+		<exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+
+        <exclude name="Generic.Files.LineLength.TooLong"/>
+        <!-- folliwing does not work! -->
+        <!--
+        <rule ref="Generic.Files.LineLength.TooLong">
+            <properties>
+                <property name="lineLimit" value="180"/>
+                <property name="absoluteLineLimit" value="0"/>
+            </properties>
+        </rule>
+        -->
+    </rule>
+</ruleset>

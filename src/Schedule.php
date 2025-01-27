@@ -2,7 +2,6 @@
 
 namespace Anonymous\Scheduling;
 
-
 use Yii;
 use Yiisoft\Mutex\Mutex;
 use Yiisoft\Mutex\File\FileMutex;
@@ -13,7 +12,6 @@ use Yiisoft\Mutex\File\FileMutex;
  */
 class Schedule extends \CComponent
 {
-
     /**
      * All of the events on the schedule.
      *
@@ -53,7 +51,7 @@ class Schedule extends \CComponent
      * @return Event
      * @throws
      */
-    public function call($callback, array $parameters = array())
+    public function call($callback, array $parameters = [])
     {
         $this->_events[] = $event = new CallbackEvent($this->_mutex, $callback, $parameters);
         return $event;
@@ -113,9 +111,10 @@ class Schedule extends \CComponent
      *
      * @param array $commands
      * @param array $afterRunHandler
+     * @param bool $inForeground
      * @return void
      */
-    public function fromCommandsAndCronsList(array $commands, array $afterRunHandler)
+    public function fromCommandsAndCronsList(array $commands, array $afterRunHandler, bool $inForeground = true)
     {
         $timestamp = date('Ymd-Hi');
         $cnt = 0;
@@ -132,7 +131,8 @@ class Schedule extends \CComponent
 
             $event = $this->command($command)
                 ->sendOutputTo(\Yii::getPathOfAlias('application.runtime.schedule') . "/{$filename}_{$timestamp}_{$cnt}.out")
-                ->cron($cronDefinition);
+                ->cron($cronDefinition)
+                ->setInForeground($inForeground);
 
             if (!empty($afterRunHandler)) {
                 $event->attachEventHandler('onAfterRun', $afterRunHandler);
